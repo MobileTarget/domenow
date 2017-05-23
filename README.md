@@ -8,7 +8,6 @@
 * [Copyrights](#copyrights)
 
 
-
 <a name="before_you_begin"></a>
 ## Before you begin
 
@@ -16,7 +15,7 @@ Make sure you install the following tools and libraries.
 
 * You should already have Node.js/npm and the Cordova package installed. If you don't, you can download and install Node from [https://nodejs.org/en/download/](https://nodejs.org/en/download/).
 
-* The Ionic CLI tool is also required. You can find instructions to install Ionic Cordova and set up your Cordova app at [http://ionicframework.com/docs/cli/).
+* The Ionic CLI tool is also required. You can find instructions to install Ionic Cordova and set up your Cordova app at [http://ionicframework.com/docs/cli/](http://ionicframework.com/docs/cli/).
     * Make sure you are using Cordova version is 6.3.0 or below.
 
 * You should have Cocoapods installed. If you don't, you can download and install Cocoapods from [http://cocoapods.org/](http://cocoapods.org/) 
@@ -99,10 +98,10 @@ ionic plugin list
 ## Using the Cordova Plugin
 
 * bms-clientsdk-cordova-plugin-push
-[https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-cordova-plugin-push).
+[https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-cordova-plugin-push](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-cordova-plugin-push)
 
 * bms-clientsdk-cordova-plugin-core
-[https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-cordova-plugin-core
+[https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-cordova-plugin-core](https://github.com/ibm-bluemix-mobile-services/bms-clientsdk-cordova-plugin-core)
 
 
 <a name="change_log"></a>
