@@ -14,7 +14,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		task_name:		"Categories",
 		child_task_id:	"",
 	};
-	$scope.api_url = "https://platform.mybluemix.net/master_api_handler";
+	$scope.api_url = "https://platform.mybluemix.net";
 	$scope.sort = {
 		order:	"asc",
 		key:	"name"
@@ -33,7 +33,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				$scope.config.page_id = parseInt(search_url.page_id);
 			}
 		}
-		//$localStorage.access_token = "1493708715026.ch7acda4kw486w29";
+		$localStorage.access_token = "1494236832287.zd1j3lcy6sn3766r";
 		//$localStorage.user_id = "2c7e2220cb312aebfbe1b283d45d35db";
 		console.log('access_token>>> ' + $localStorage.access_token)
 		console.log('user_id>>> ' + $localStorage.user_id)
@@ -84,9 +84,10 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		console.log("$scope.config>>>", $scope.config);
 		$scope.title = $scope.config.task_name;
 		var user_info = myService.getUserInfo();
-		if(typeof user_info.type !="undefined"
-				 && typeof user_info.type.admin !="undefined"
-				 && user_info.type.admin == "admin") {
+		if(typeof user_info !="undefined"
+				&& typeof user_info.type !="undefined"
+				&& typeof user_info.type.admin !="undefined"
+				&& user_info.type.admin == "admin") {
 			$scope.isAdmin = true;
 		}
 		else {
@@ -252,7 +253,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	
 	$scope.loadTemplate = function(){
 		$scope.config = {
-			page_id:		2,
+			page_id:		1,
 			from_page_id:	1,
 			task_id:		"3_0",
 			task_name:		'Categories'
@@ -267,14 +268,14 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}
 		}
 		$scope.setConfig();
-		var templateUrl = "templates/category.html";
+		var templateUrl = "templates/login.html";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			$scope.html = template;
 		}, function(err) {
 			
 		});
-		var templateUrl = "templates/category.js";
+		var templateUrl = "templates/login.js";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			eval(template);
@@ -287,7 +288,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		request_data.user_id = $localStorage.user_id;
 		request_data.access_token = $localStorage.access_token;
 		
-		var api_url = request_data.api_url || $scope.api_url;
+		var api_url = request_data.api_url || $scope.api_url+"/master_api_handler";
 		var api_mode = request_data.api_mode || "get";
 		var api_type = request_data.api_type || "";
 		var api_next_fn = request_data.api_next_fn || "";
@@ -297,6 +298,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		delete request_data["api_next_fn"];
 		console.log("request_data>>>", request_data);
 		
+		utilityService.setBusy(true, "Processing...");
 		var headers = {"Content-Type": "application/json"};
 		var config = {headers:headers};
 		if(api_mode == "post"){
@@ -304,8 +306,10 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				var res_data = res.data;
 				console.log("res_data>>>", res_data);
 				eval(api_next_fn);
+				utilityService.setBusy(false);
 			}, function(err) {
 				console.log("err>>>", err);
+				utilityService.setBusy(false);
 			});
 		}
 		else if(api_mode == "get"){
@@ -314,12 +318,15 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				var res_data = res.data;
 				console.log("res_data>>>", res_data);
 				eval(api_next_fn);
+				utilityService.setBusy(false);
 			}, function(err) {
 				console.log("err>>>", err);
+				utilityService.setBusy(false);
 			});
 		}
 		else {
 			console.log("warning: api_mode is missing.");
+			utilityService.setBusy(false);
 		}
 	}
 	//custom js
@@ -363,19 +370,22 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		$scope.goPage(page_id);
 	};
 	$scope.deleteDetails = function(item) {
-		var endpoint = $scope.api_url;
-		var parameters = {
+		$scope.details.splice($scope.details.indexOf(item), 1);
+		
+		/*
+		var endpoint = $scope.api_url + "/master_api_handler";
+		var request_data = {
 			table:			"delete_detail",
 			access_token:	$localStorage.access_token,
 			table_data:		{
 				id:	item.id
 			}
 		};
-		//console.log(parameters);return true;
+		//console.log(request_data);return true;
 		utilityService.setBusy(true, "Processing...");
 		var headers = {"Content-Type": "application/json"};
-		var config = {params:parameters, headers:headers};
-		$http.get(endpoint, config).then(function(res){
+		var config = {headers:headers};
+		$http.post(endpoint, request_data, config).then(function(res) {
 			if(res.data.status == 200){
 				$scope.details.splice($scope.details.indexOf(item), 1);
 			}
@@ -383,10 +393,10 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				
 			}
 			utilityService.setBusy(false);
-		}, function(err_task){
-			console.log('err_task', err_task);
+		}, function(err) {
+			console.log('err_task', err);
 			utilityService.setBusy(false);
-		});
+		});*/
 	};
 	//utils
 	$scope.inputUp = function() {

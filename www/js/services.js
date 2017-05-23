@@ -1,5 +1,5 @@
 DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
-	var appName = "Note To Self";
+	var appName = "Do me now";
 	this.sortByKey = function(array, key, order) {
 		return array.sort(function(a, b) {
 			var x = a[key]; var y = b[key];
