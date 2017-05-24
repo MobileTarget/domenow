@@ -33,10 +33,11 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				$scope.config.page_id = parseInt(search_url.page_id);
 			}
 		}
-		//$localStorage.access_token = "1495553036558.phux04parvayk3xr";
+		//$localStorage.access_token = "1495621862541.mgf9ofe5mtqvkj4i";
 		//$localStorage.user_id = "2c7e2220cb312aebfbe1b283d45d35db";
-		console.log('access_token>>> ' + $localStorage.access_token)
-		console.log('user_id>>> ' + $localStorage.user_id)
+		console.log('access_token>>> ' + $localStorage.access_token);
+		console.log('user_id>>> ' + $localStorage.user_id);
+		console.log('offline_queue>>> ' + $localStorage.offline_queue);
 		//dbService.doSync();
 		
 		$scope.is_test = true;
@@ -47,7 +48,8 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			$scope.loadTemplate();
 		}
 		else {
-			if(!$localStorage.access_token){console.log("go login>>>");
+			if(!$localStorage.access_token){
+				console.log("go to login page>>>");
 				$scope.config.page_id = 1;
 				$scope.config.from_page_id = 0;
 				$scope.goPage($scope.config.page_id);
@@ -59,8 +61,9 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		}
 	};
 	//
-	$scope.getPageDetail = function() {console.log("get detail>>>");
+	$scope.getPageDetail = function() {
 		var detailData = myService.getDetail();
+		console.log("get detail>>>", detailData);
 		var myDetail = [];
 		for (var ind = 0; ind<detailData.length; ind++) {
 			var item = detailData[ind];
@@ -94,7 +97,6 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			$scope.isAdmin = false;
 		}
 		$scope.getPageDetail();
-		console.log("call detail>>>");
 	};
 	$scope.setPage = function() {
 		$scope.setConfig();
@@ -127,21 +129,24 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 					break;
 				}
 			}
-			if(page_id == 1){
-				$localStorage.access_token = myService.apiResult.access_token;
-			}
 			$scope.setPage();
 		}
 		else {
 			//if(page_id == 1 || page_id == 11){
 				HttpService.getServerPage(page_id).then(function(result) {
 					console.log("server page response>>>", result);
-					$scope.config.page_id = result.page_id;
-					if($scope.config.page_id == 1){
-						$localStorage.access_token = result.access_token;
+					if(typeof result.error != "undefined" && result.error) {
+						utilityService.showAlert(result.msg);
+						utilityService.setBusy(false);
 					}
-					myService.apiResult = result;
-					$scope.setPage();
+					else {
+						$scope.config.page_id = result.page_id;
+						if($scope.config.page_id == 1){
+							$localStorage.access_token = result.access_token;
+						}
+						myService.apiResult = result;
+						$scope.setPage();
+					}
 				});
 			/*}
 			else {
@@ -298,6 +303,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		
 		delete request_data["api_url"];
 		delete request_data["api_mode"];
+		delete request_data["api_type"];
 		delete request_data["api_next_fn"];
 		delete request_data["api_on_error_fn"];
 		delete request_data["api_offline_queue"];
@@ -397,7 +403,19 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		}
 		else {//offline
 			if(api_offline_queue) {//save to queue
-				
+				var offline_data = JSON.parse($localStorage.offline_queue);
+				if( Object.prototype.toString.call( offline_data ) !== '[object Array]') {
+					offline_data = [];
+				}
+				var queue_data = {
+						"page_id":		$scope.config.page_id,
+						"api_type":		api_type,
+						"api_url":		api_url,
+						"api_mode":		api_mode,
+						"request_data":	request_data
+					};
+				offline_data.push(queue_data);
+				$localStorage.offline_queue = JSON.stringify(offline_data);
 			}
 			if(api_offline_fn) {
 				eval(api_offline_fn);
