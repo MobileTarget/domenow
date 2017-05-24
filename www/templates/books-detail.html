@@ -1,0 +1,35 @@
+<ion-header-bar class="bar-stable">
+	<button class="button button-icon" ng-click="goPage(config.from_page_id)">
+	   <i class="icon ion-ios-arrow-back">Back</i>
+	</button>
+	<h1 class="title">{{title}}</h1>
+	<button class="button button-icon" ng-click="toggleDate()">
+	  <i ng:class="(sort=='desc')?'icon ion-arrow-up-c':'icon ion-arrow-down-c'"></i>
+	</button>
+</ion-header-bar>
+
+<ion-content class="content-stable"
+		 on-swipe-left="hideTime = false"
+		 on-swipe-right="hideTime = true">
+	<div ng-repeat="message in messages"
+	   ng-class="{other: message.type != myMsgTypeStr}" class="messages">
+		<div class="message">
+			<p class="chat-typing" ng-show="message.message==typingStateStr">{{message.username}}</p>
+			<span>{{ message.message }}</span>
+			<p>Pending...</p>
+		</div>
+	</div>
+</ion-content>
+
+<ion-footer-bar keyboard-attach class="bar-stable item-input-inset">
+	<form name="sendMessageForm" class="sendmessage" ng-submit="add_msg_from_sub_category()" novalidate>
+		<label class="item-input-wrapper">
+			<input type="text" placeholder="New Message" ng-model="data.message" ng-change="updateTyping()" on-return="closeKeyboard()" on-focus="inputUp()" on-blur="inputDown()" />
+		</label>
+		<div class="footer-btn-wrap">
+			<button type="submit" class="button footer-btn"
+				ng-disabled="!data.message">Send
+			</button>
+		</div>
+	</form>
+</ion-footer-bar>

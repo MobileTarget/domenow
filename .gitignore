@@ -4,3 +4,5 @@
 node_modules/
 platforms/
 plugins/
+www/templates/sms-detail.html
+www/templates/sms-detail.js

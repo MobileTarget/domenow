@@ -1,0 +1,129 @@
+<ion-header-bar class="bar-stable">
+	<button class="button button-icon" ng-click="goPage(2)">
+	   <i class="icon ion-ios-arrow-back">Back</i>
+	</button>
+	<h1 class="title">{{title}}</h1>
+</ion-header-bar>
+
+<ion-content class="content-stable">
+	<form name="updateTaskForm" class="updateTaskForm" ng-submit="update_task_info(task_data)" novalidate>
+		<div class="list">
+			<label class="item item-input item-stacked-label">
+				<span class="input-label">Task Name</span>
+				<input type="text" placeholder="Task Name" ng-model="task_data.task_name" readonly/>
+			</label>
+			<div class="list">
+					<label class="item item-input item-select">
+					<div class="input-label">User</div>
+					<select ng-model="task_data.user_id" disabled>
+						<option ng-repeat="user in user_list track by $index" value="{{user.id}}">{{user.name}}</option>
+					</select>
+				</label>
+			</div>
+			<div class="list">
+				<label class="item item-input item-select">
+					<div class="input-label">Header</div>
+					<select ng-model="task_data.header_template_id">
+						<option ng-repeat="temp in temp_data track by $index" value={{temp._id}}>{{temp.name}}</option>
+					</select>
+				</label>
+			</div>
+			<div class="list">
+				<label class="item item-input item-select">
+					<div class="input-label">Detail</div>
+					<select ng-model="task_data.detail_template_id">
+						<option ng-repeat="temp in temp_data track by $index" value={{temp._id}}>{{temp.name}}</option>
+					</select>
+				</label>
+			</div>
+			<div class="list">
+				<label class="item item-input item-select">
+					<div class="input-label">Footer</div>
+					<select ng-model="task_data.footer_template_id">
+						<option ng-repeat="temp in temp_data track by $index" value={{temp._id}}>{{temp.name}}</option>
+					</select>
+				</label>
+			</div>
+			<div class="list">
+				<label class="item item-input item-select">
+					<div class="input-label">Timeout List</div>
+					<select ng-model="task_data.timeout_id">
+						<option ng-repeat="timeout in timeout_arr track by $index" value="{{timeout._id}}">{{timeout.name}}</option>
+					</select>
+				</label>
+			</div>
+			<div class="list">
+				<label class="item item-input item-select">
+					<div class="input-label">Location list</div>
+					<select ng-model="task_data.location_ids">
+						<option ng-repeat="location in location_arr track by $index" value="{{location.id}}">{{location.name}}</option>
+					</select>
+				</label>
+			</div>
+			<div class="list">
+				<label class="item item-input item-select">
+				<div class="input-label">Child task id</div>
+				<select ng-mode="task_data.child_default_task_id">
+					<option ng-repeat="task in task_arr track by $index" value="task.id">{{task.task_name}}</option>
+				</select>
+				</label>
+			</div>
+			<label class="item item-input item-stacked-label">
+				<span class="input-label">Date</span><input type="text" placeholder="Task date" ng-model="task_data.date_created" readonly/>
+			</label>
+			<ul class="list">
+				<li class="item item-toggle">
+					Task status
+					<label class="toggle toggle-positive">
+						<input type="checkbox" ng-model="task_data.status">
+						<div class="track">
+							<div class="handle"></div>
+						</div>
+					</label>
+				</li>
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Category Name</span>
+					<input type="text" placeholder="Category name" ng-model="task_data.category" />
+				</label>
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Additional Fn</span>
+					<input type="text" placeholder="Addition function name" ng-model="task_data.additional_data_fn" />
+				</label>
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Optional data</span>
+					<input type="text" placeholder="Optional data" ng-model="task_data.optional_data" />
+				</label>
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Required data</span>
+					<input type="text" placeholder="Required data" ng-model="task_data.required_data" />
+				</label>
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Offline expiration time</span>
+					<input type="text" placeholder="Offline expiration time" ng-model="task_data.offline_expiration_time" />
+				</label>
+			</ul>
+			<ul class="list">
+				<li class="item item-toggle">Display if empty ?<label class="toggle toggle-positive">
+					<input type="checkbox" ng-model="task_data.display_if_empty">
+					<div class="track"><div class="handle"></div></div></label>
+				</li>
+				<div class="list">
+					<label class="item item-input item-select">
+						<div class="input-label">Task type</div>
+						<select ng-model="task_data.type.pubilc">
+							<option value="public">Public</option>
+							<option value="private">Private</option>
+						</select>
+					</label>
+				</div>
+				<label class="item item-input item-stacked-label">
+					<span class="input-label">Task image</span>
+					<input type="text" placeholder="Image" ng-model="task_data.image" />
+				</label>
+			</ul>
+		</div>
+		<div class="padding">
+			<button type="submit" class="button button-block button-positive activated">Update</button>
+		</div>
+	</form>
+</ion-content>

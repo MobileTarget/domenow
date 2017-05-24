@@ -33,7 +33,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				$scope.config.page_id = parseInt(search_url.page_id);
 			}
 		}
-		$localStorage.access_token = "1494236832287.zd1j3lcy6sn3766r";
+		//$localStorage.access_token = "1495553036558.phux04parvayk3xr";
 		//$localStorage.user_id = "2c7e2220cb312aebfbe1b283d45d35db";
 		console.log('access_token>>> ' + $localStorage.access_token)
 		console.log('user_id>>> ' + $localStorage.user_id)
@@ -42,7 +42,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		$scope.is_test = true;
 		$scope.is_test = false;
 		$scope.is_template = true;
-		$scope.is_template = false;
+		//$scope.is_template = false;
 		if($scope.is_template){
 			$scope.loadTemplate();
 		}
@@ -253,9 +253,9 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	
 	$scope.loadTemplate = function(){
 		$scope.config = {
-			page_id:		1,
+			page_id:		2,
 			from_page_id:	1,
-			task_id:		"3_0",
+			task_id:		"2_0",
 			task_name:		'Categories'
 		};
 		console.log("template page>>>"+ $scope.config.page_id);
@@ -268,14 +268,14 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}
 		}
 		$scope.setConfig();
-		var templateUrl = "templates/login.html";
+		var templateUrl = "templates/category.html";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			$scope.html = template;
 		}, function(err) {
 			
 		});
-		var templateUrl = "templates/login.js";
+		var templateUrl = "templates/category.js";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			eval(template);
@@ -289,44 +289,113 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		request_data.access_token = $localStorage.access_token;
 		
 		var api_url = request_data.api_url || $scope.api_url+"/master_api_handler";
-		var api_mode = request_data.api_mode || "get";
+		var api_mode = request_data.api_mode || "GET";
 		var api_type = request_data.api_type || "";
 		var api_next_fn = request_data.api_next_fn || "";
+		var api_offline_queue = request_data.api_offline_queue || "";
+		var api_offline_fn = request_data.api_offline_fn || "";
+		var api_on_error_fn = request_data.api_on_error_fn || "";
 		
 		delete request_data["api_url"];
 		delete request_data["api_mode"];
 		delete request_data["api_next_fn"];
+		delete request_data["api_on_error_fn"];
+		delete request_data["api_offline_queue"];
+		delete request_data["api_offline_fn"];
 		console.log("request_data>>>", request_data);
 		
-		utilityService.setBusy(true, "Processing...");
-		var headers = {"Content-Type": "application/json"};
-		var config = {headers:headers};
-		if(api_mode == "post"){
-			$http.post(api_url, request_data, config).then(function(res) {
-				var res_data = res.data;
-				console.log("res_data>>>", res_data);
-				eval(api_next_fn);
-				utilityService.setBusy(false);
-			}, function(err) {
-				console.log("err>>>", err);
-				utilityService.setBusy(false);
-			});
+		api_type=api_type.toUpperCase();
+		switch(api_type) {
+			case "ADD_DETAIL": {
+				api_offline_queue = true;
+				api_offline_fn = "mark_detail_pending";
+				api_next_fn = $scope.getPage();
+				api_on_error_fn = "add_error_fn";
+				api_mode = "POST";
+				break;
+			}
+			case "DELETE_DETAIL": {
+				api_offline_queue = true;
+				api_offline_fn = "mark_detail_pending";
+				api_next_fn = $scope.deleteDetail();
+				api_on_error_fn = "delete_error_fn";
+				api_mode = "POST";
+				break;
+			}
+			case "GET_PAGE": {
+				api_offline_queue = false;
+				api_offline_fn = "mark_page_pending";
+				api_next_fn = "";
+				api_on_error_fn = "get_error_fn";
+				api_mode = "GET";
+				break;
+			}	
+			case "UPDATE_GET_USER_TASK": {
+				api_offline_queue = false;
+				api_offline_fn = "";
+				api_next_fn = "";
+				api_on_error_fn = "";
+				api_mode = "GET";
+				break;
+			}	
+			case "UPDATE_GET_PAGES": {
+				api_offline_queue = false;
+				api_offline_fn = "";
+				api_next_fn = "";
+				api_on_error_fn = "";
+				api_mode = "GET";
+				break;
+			}		
+			default:{
+				break;
+			}
 		}
-		else if(api_mode == "get"){
-			config.params = request_data;
-			$http.get(api_url, config).then(function(res){
-				var res_data = res.data;
-				console.log("res_data>>>", res_data);
-				eval(api_next_fn);
+		var isOnline = HttpService.isOnline();
+		if(isOnline) {
+			utilityService.setBusy(true, "Processing...");
+			var headers = {"Content-Type": "application/json"};
+			var config = {headers:headers};
+			api_mode = api_mode.toUpperCase();
+			if(api_mode == "POST"){
+				$http.post(api_url, request_data, config).then(function(res) {
+					var res_data = res.data;
+					console.log("res_data>>>", res_data);
+					if(api_next_fn) {
+						eval(api_next_fn);
+					}
+					utilityService.setBusy(false);
+				}, function(err) {
+					console.log("err>>>", err);
+					if(api_on_error_fn) {
+						eval(api_on_error_fn);
+					}
+					utilityService.setBusy(false);
+				});
+			}
+			else if(api_mode == "GET") {
+				config.params = request_data;
+				$http.get(api_url, config).then(function(res){
+					var res_data = res.data;
+					console.log("res_data>>>", res_data);
+					eval(api_next_fn);
+					utilityService.setBusy(false);
+				}, function(err) {
+					console.log("err>>>", err);
+					utilityService.setBusy(false);
+				});
+			}
+			else {
+				console.log("warning: api_mode is missing.");
 				utilityService.setBusy(false);
-			}, function(err) {
-				console.log("err>>>", err);
-				utilityService.setBusy(false);
-			});
+			}
 		}
-		else {
-			console.log("warning: api_mode is missing.");
-			utilityService.setBusy(false);
+		else {//offline
+			if(api_offline_queue) {//save to queue
+				
+			}
+			if(api_offline_fn) {
+				eval(api_offline_fn);
+			}
 		}
 	}
 	//custom js
@@ -369,10 +438,10 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		var page_id = 16;
 		$scope.goPage(page_id);
 	};
-	$scope.deleteDetails = function(item) {
+	$scope.deleteDetail = function(item) {
 		$scope.details.splice($scope.details.indexOf(item), 1);
-		
 		/*
+		
 		var endpoint = $scope.api_url + "/master_api_handler";
 		var request_data = {
 			table:			"delete_detail",

@@ -1,0 +1,28 @@
+<ion-header-bar class="bar-stable">
+	<button class="button button-icon" ng-click="goPage(2)">
+		<i class="icon ion-ios-arrow-back">Back</i>
+	</button>
+	<h1 class="title">{{title}}</h1>
+</ion-header-bar>
+
+<ion-content class="content-stable">
+	<form name="updateTaskForm" class="updateTaskForm" ng-submit="update_detail_short_info(short_info)" novalidate>
+		<div class="list">
+			<label class="item item-input item-stacked-label">
+				<span class="input-label">Message</span>
+				<input type="text" placeholder="User message" ng-model="short_info.message" />
+			</label>
+			<label class="item item-input item-stacked-label">
+				<span class="input-label">Task name</span>
+				<input type="text" placeholder="Task name" ng-model="short_info.task_name" />
+			</label>
+			<label class="item item-input item-stacked-label">
+				<span class="input-label">User task status</span>
+				<input type="text" placeholder="User task status" ng-model="short_info.staus" />
+			</label>
+		</div>
+		<div class="padding">
+			<button class="button button-block button-positive" type="submit">Update</button>
+		</div>
+	</form>
+</ion-content>
