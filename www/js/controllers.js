@@ -2,7 +2,7 @@
 DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		$ionicScrollDelegate, $ionicPopup, $http,
 		$templateRequest, $localStorage, $q, $window, 
-		myService, utilityService, HttpService,
+		myService, utilityService, HttpService, BluemixService,
 		Task, dbService,
 		Socket, Chat) {
 	var isIOS = ionic.Platform.isIOS();
@@ -33,7 +33,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				$scope.config.page_id = parseInt(search_url.page_id);
 			}
 		}
-		//$localStorage.access_token = "1495621862541.mgf9ofe5mtqvkj4i";
+		//$localStorage.access_token = "1495637591157.urd92aeugq1if6r";
 		//$localStorage.user_id = "2c7e2220cb312aebfbe1b283d45d35db";
 		console.log('access_token>>> ' + $localStorage.access_token);
 		console.log('user_id>>> ' + $localStorage.user_id);
@@ -85,6 +85,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		$scope.config.task_name = task_info.task_name;
 		$scope.config.child_task_id = task_info.child_task_id;
 		console.log("$scope.config>>>", $scope.config);
+		
 		$scope.title = $scope.config.task_name;
 		var user_info = myService.getUserInfo();
 		if(typeof user_info != "undefined"
@@ -142,7 +143,9 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 					else {
 						$scope.config.page_id = result.page_id;
 						if($scope.config.page_id == 1){
-							$localStorage.access_token = result.access_token;
+							//$localStorage.access_token = result.access_token;
+							delete $localStorage.access_token;
+							delete $localStorage.BMSPush_allow;
 						}
 						myService.apiResult = result;
 						$scope.setPage();
@@ -258,7 +261,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	
 	$scope.loadTemplate = function(){
 		$scope.config = {
-			page_id:		2,
+			page_id:		11,
 			from_page_id:	1,
 			task_id:		"2_0",
 			task_name:		'Categories'
@@ -273,14 +276,14 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}
 		}
 		$scope.setConfig();
-		var templateUrl = "templates/category.html";
+		var templateUrl = "templates/verify.html";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			$scope.html = template;
 		}, function(err) {
 			
 		});
-		var templateUrl = "templates/category.js";
+		var templateUrl = "templates/verify.js";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			eval(template);
@@ -425,7 +428,8 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	//custom js
 	$scope.logout = function() {
 		//$localStorage.$reset();
-		$localStorage.access_token = null;
+		delete $localStorage.access_token;
+		delete $localStorage.BMSPush_allow;
 		$scope.goPage(1);
 	};
 	$scope.editUser = function(){

@@ -16,11 +16,11 @@ DomenowApp.run(function($ionicPlatform, BluemixService, $window) {
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
-	
+	console.log("ionicPlatform ready>>>>>>>");
 	BluemixService.connect().then(function success(response) {
-		console.log("We registered OK. The deviceID of this device is: " + response);
+		console.log("Bluemix app registered OK. The deviceID of this device is: " + response);
 	}, function failure(response) {
-		console.log("Registering for push did not work");
+		console.log("Registering for Bluemix app push did not work");
 	});
   });
 })

@@ -18,6 +18,12 @@ $scope.verify = function(user){
 		console.log("res_data>>>",res_data);
 		if (res_data.status == "valid") {
 			$localStorage.user_id = res_data.user_id;
+			
+			BluemixService.connect().then(function success(response) {
+				console.log("Bluemix verify registered OK. The deviceID of this device is: " + response);
+			}, function failure(response) {
+				console.log("Registering for Bluemix verify push did not work");
+			});
 		}
 		myService.apiResult = res_data;
 		$scope.goPage(res_data.page_id);

@@ -19,14 +19,16 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
         });
         return alertPopup;
     };
-	this.showConfirm = function(txt, title) {
-		if (title === void 0) {
+	this.showConfirm = function(title, message, cancelText, okText) {
+		if (!title) {
             title = appName;
         }		
 		var confirmPopup = $ionicPopup.confirm({
             title: title,
-            template: txt
-        });
+            template: message,
+			cancelText: cancelText,
+        	okText: okText
+		});
 		return confirmPopup;
 	};
 	this.busyState = false;
@@ -329,17 +331,32 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
 		});
 	}
 })
-.service('BluemixService', function ($window, $q) {
+.service('BluemixService', function ($window, $q, $localStorage, utilityService) {
 	var appGuid = "3d321d52-0b21-485a-8669-7e19684b070b";
 	var clientSecret = "49f01d0f-f469-42c6-b9db-fd0cc67bb6a8";
 	
 	this.connect = function () {
 		// create deferred object using $q
 		var deferred = $q.defer();
-		if (window.cordova) {
-
+		var deviceId = "Web View";
+		
+		console.log("$localStorage.BMSPush_allow>>>" + $localStorage.BMSPush_allow);
+		if(window.cordova && $localStorage.access_token) {
+		  
+		  if(typeof $localStorage.BMSPush_allow == "undefined"){
+			var confirm_msg = 'Would Like to Send You Push Notifications';
+			utilityService.showConfirm("", confirm_msg, "Don't Allow", "OK")
+			.then(function(res) {
+				if(res) $localStorage.BMSPush_allow = true;
+				else $localStorage.BMSPush_allow = false;
+			});
+		  }
+		  if(!$localStorage.BMSPush_allow) {
+			return $q.when(deviceId);
+		  }
+		  
 		  $window.BMSClient.initialize(BMSClient.REGION_US_SOUTH);
-
+		  
 		  // iOS Actionable notification options. Eg : {"category_Name":[{"identifier_name_1":"action_Name_1"},{"identifier_name_2":"action_Name_2"}]}
 		  // Pass empty for Android
 		  var category = {};
@@ -349,16 +366,16 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
 			//alert("call register")
 			var success = function(successResponse) {
 				console.log("You are registered for Push Notifications.");
-				alert("Success Response:" + successResponse);
+				console.log("BMS Success Response:" + successResponse);
 				var deviceId = JSON.parse(successResponse).deviceId;
 				deferred.resolve(deviceId);
 			};
 			var failure = function(failureResponse) {
-				console.log("Something Went Wrong");
-				alert("Failure Response:" + failureResponse);
+				console.log("BMS Something Went Wrong");
+				console.log("BMS Failure Response:" + failureResponse);
 				deferred.reject(failureResponse);
 			};
-			var options = {"userId":"your_UserId"};
+			var options = {"userId": $localStorage.user_id};
 			
 			var showNotification = function(notif) {
 				console.log(JSON.stringify(notif));
@@ -369,8 +386,6 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
 			$window.BMSPush.registerNotificationsCallback(showNotification);
 		  }, 1000);
 		  deviceId = deferred.promise;
-		} else {
-			deviceId = "Web View";
 		}
 		return $q.when(deviceId);
 	};
