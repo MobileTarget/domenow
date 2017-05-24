@@ -42,7 +42,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		$scope.is_test = true;
 		$scope.is_test = false;
 		$scope.is_template = true;
-		//$scope.is_template = false;
+		$scope.is_template = false;
 		if($scope.is_template){
 			$scope.loadTemplate();
 		}
@@ -84,9 +84,9 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		console.log("$scope.config>>>", $scope.config);
 		$scope.title = $scope.config.task_name;
 		var user_info = myService.getUserInfo();
-		if(typeof user_info !="undefined"
-				&& typeof user_info.type !="undefined"
-				&& typeof user_info.type.admin !="undefined"
+		if(typeof user_info != "undefined"
+				&& typeof user_info.type != "undefined"
+				&& typeof user_info.type.admin != "undefined"
 				&& user_info.type.admin == "admin") {
 			$scope.isAdmin = true;
 		}
@@ -304,12 +304,13 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		delete request_data["api_offline_fn"];
 		console.log("request_data>>>", request_data);
 		
+		var res_data = "";
 		api_type=api_type.toUpperCase();
 		switch(api_type) {
 			case "ADD_DETAIL": {
 				api_offline_queue = true;
 				api_offline_fn = "mark_detail_pending";
-				api_next_fn = $scope.getPage();
+				api_next_fn = "$scope.getPage()";
 				api_on_error_fn = "add_error_fn";
 				api_mode = "POST";
 				break;
@@ -317,7 +318,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			case "DELETE_DETAIL": {
 				api_offline_queue = true;
 				api_offline_fn = "mark_detail_pending";
-				api_next_fn = $scope.deleteDetail();
+				api_next_fn = '$scope.deleteDetail(request_data)';
 				api_on_error_fn = "delete_error_fn";
 				api_mode = "POST";
 				break;
@@ -346,7 +347,12 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_mode = "GET";
 				break;
 			}		
-			default:{
+			default: {
+				api_offline_queue = false;
+				api_offline_fn = "";
+				api_next_fn = '$scope.defaultNextFn(request_data, res_data)';
+				api_on_error_fn = "";
+				api_mode = "GET";
 				break;
 			}
 		}
@@ -438,34 +444,20 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		var page_id = 16;
 		$scope.goPage(page_id);
 	};
-	$scope.deleteDetail = function(item) {
-		$scope.details.splice($scope.details.indexOf(item), 1);
-		/*
-		
-		var endpoint = $scope.api_url + "/master_api_handler";
-		var request_data = {
-			table:			"delete_detail",
-			access_token:	$localStorage.access_token,
-			table_data:		{
-				id:	item.id
+	$scope.deleteDetail = function(request_data) {
+		var item_id = request_data.table_data.id;
+		var item_index = null;
+		angular.forEach($scope.details, function(value, key) {
+			if(value.id == item_id) {
+				item_index = key;
 			}
-		};
-		//console.log(request_data);return true;
-		utilityService.setBusy(true, "Processing...");
-		var headers = {"Content-Type": "application/json"};
-		var config = {headers:headers};
-		$http.post(endpoint, request_data, config).then(function(res) {
-			if(res.data.status == 200){
-				$scope.details.splice($scope.details.indexOf(item), 1);
-			}
-			else {
-				
-			}
-			utilityService.setBusy(false);
-		}, function(err) {
-			console.log('err_task', err);
-			utilityService.setBusy(false);
-		});*/
+		});
+		if(item_index != null) {
+			$scope.details.splice(item_index, 1);
+		}
+	};
+	$scope.defaultNextFn = function(request_data, res_data) {
+		console.log(request_data, res_data);
 	};
 	//utils
 	$scope.inputUp = function() {
