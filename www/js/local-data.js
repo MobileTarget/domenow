@@ -702,6 +702,10 @@ var samplePages = [
                 "watson_incoming":{},
                 "date_created":	"1/26/2017 5:05 PM",
                 "from_user":{},
+				"count": {
+					"active": 1,
+					"unread": 0
+				},
                 "a":	"detail content b"
 			},
 			{
@@ -716,6 +720,10 @@ var samplePages = [
                 "watson_incoming":{},
                 "date_created": "1/26/2017 6:06 PM",
                 "from_user":{},
+				"count": {
+					"active": 1,
+					"unread": 0
+				},
                 "a":	"detail content b"
 			},
 			{
@@ -730,6 +738,10 @@ var samplePages = [
                 "watson_incoming":{},
                 "date_created": "1/26/2017 7:07 PM",
                 "from_user":{},
+				"count": {
+					"active": 1,
+					"unread": 0
+				},
                 "a":	"detail content b"
 			}
 		]

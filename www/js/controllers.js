@@ -137,7 +137,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				HttpService.getServerPage(page_id).then(function(result) {
 					console.log("server page response>>>", result);
 					if(typeof result.error != "undefined" && result.error) {
-						utilityService.showAlert(result.msg);
+						utilityService.showAlert("Error: "+result.msg);
 						utilityService.setBusy(false);
 					}
 					else {
@@ -314,6 +314,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		console.log("request_data>>>", request_data);
 		
 		var res_data = "";
+		var err_data = "";
 		api_type=api_type.toUpperCase();
 		switch(api_type) {
 			case "ADD_DETAIL": {
@@ -328,7 +329,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = true;
 				api_offline_fn = "mark_detail_pending";
 				api_next_fn = '$scope.deleteDetail(request_data)';
-				api_on_error_fn = "delete_error_fn";
+				api_on_error_fn = "$scope.delete_error_fn(request_data, err_data)";
 				api_mode = "POST";
 				break;
 			}
@@ -379,8 +380,8 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 						eval(api_next_fn);
 					}
 					utilityService.setBusy(false);
-				}, function(err) {
-					console.log("err>>>", err);
+				}, function(err_data) {
+					console.log("api err>>>", err_data);
 					if(api_on_error_fn) {
 						eval(api_on_error_fn);
 					}
@@ -394,8 +395,8 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 					console.log("res_data>>>", res_data);
 					eval(api_next_fn);
 					utilityService.setBusy(false);
-				}, function(err) {
-					console.log("err>>>", err);
+				}, function(err_data) {
+					console.log("api err>>>", err_data);
 					utilityService.setBusy(false);
 				});
 			}
@@ -477,6 +478,9 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		if(item_index != null) {
 			$scope.details.splice(item_index, 1);
 		}
+	};
+	$scope.delete_error_fn = function(request_data, err_data) {
+		utilityService.showAlert("Error: "+err_data.data.msg);
 	};
 	$scope.defaultNextFn = function(request_data, res_data) {
 		console.log(request_data, res_data);
