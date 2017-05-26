@@ -145,7 +145,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 						if($scope.config.page_id == 1){
 							//$localStorage.access_token = result.access_token;
 							delete $localStorage.access_token;
-							delete $localStorage.BMSPush_allow;
+							delete $localStorage.push_accepted;
 						}
 						myService.apiResult = result;
 						$scope.setPage();
@@ -319,7 +319,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		switch(api_type) {
 			case "ADD_DETAIL": {
 				api_offline_queue = true;
-				api_offline_fn = "mark_detail_pending";
+				api_offline_fn = "$scope.mark_detail_pending()";
 				api_next_fn = "$scope.getPage()";
 				api_on_error_fn = "add_error_fn";
 				api_mode = "POST";
@@ -327,8 +327,8 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}
 			case "DELETE_DETAIL": {
 				api_offline_queue = true;
-				api_offline_fn = "mark_detail_pending";
-				api_next_fn = '$scope.deleteDetail(request_data)';
+				api_offline_fn = "$scope.mark_detail_pending()";
+				api_next_fn = "$scope.deleteDetail(request_data)";
 				api_on_error_fn = "$scope.delete_error_fn(request_data, err_data)";
 				api_mode = "POST";
 				break;
@@ -356,7 +356,39 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_on_error_fn = "";
 				api_mode = "GET";
 				break;
-			}		
+			}
+			case "URL": {
+				api_offline_queue = false;
+				api_offline_fn = "";
+				api_next_fn = "";
+				api_on_error_fn = "";
+				api_mode = "GET";
+				break;
+			}
+			case "UPDATE_MORE_INFO": {
+				api_offline_queue = true;
+				api_offline_fn = "$scope.mark_detail_pending()";
+				api_next_fn = "$scope.getPage()";
+				api_on_error_fn = "add_error_fn";
+				api_mode = "POST";
+				break;
+			}
+			case "UPDATE_USER_DETAILS": {
+				api_offline_queue = true;
+				api_offline_fn = "$scope.mark_detail_pending()";
+				api_next_fn = "$scope.getPage()";
+				api_on_error_fn = "add_error_fn";
+				api_mode = "POST";
+				break;
+			}
+			case "UPDATE_EDIT_SHORT_DETAIL": {
+				api_offline_queue = true;
+				api_offline_fn = "$scope.mark_detail_pending()";
+				api_next_fn = "$scope.getPage()";
+				api_on_error_fn = "add_error_fn";
+				api_mode = "POST";
+				break;
+			}
 			default: {
 				api_offline_queue = false;
 				api_offline_fn = "";
@@ -430,7 +462,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	$scope.logout = function() {
 		//$localStorage.$reset();
 		delete $localStorage.access_token;
-		delete $localStorage.BMSPush_allow;
+		delete $localStorage.push_accepted;
 		$scope.goPage(1);
 	};
 	$scope.editUser = function(){
@@ -478,6 +510,9 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		if(item_index != null) {
 			$scope.details.splice(item_index, 1);
 		}
+	};
+	$scope.mark_detail_pending = function(request_data) {
+		console.log("detail pending");
 	};
 	$scope.delete_error_fn = function(request_data, err_data) {
 		utilityService.showAlert("Error: "+err_data.data.msg);

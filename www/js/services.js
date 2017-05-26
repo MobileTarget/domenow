@@ -89,6 +89,7 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
 		}, function(err) {
 			console.log("get server page err>>>",err);
 			res_data.status = -1;
+			res_data.error = true;
 			return res_data;
 		});
 	};
@@ -338,55 +339,52 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
 	this.connect = function () {
 		// create deferred object using $q
 		var deferred = $q.defer();
-		var deviceId = "Web View";
 		
-		console.log("$localStorage.BMSPush_allow>>>" + $localStorage.BMSPush_allow);
-		if(window.cordova && $localStorage.access_token) {
+		console.log("$localStorage.push_accepted>>>" + $localStorage.push_accepted);
+		if(window.cordova) {
 		  
-		  if(typeof $localStorage.BMSPush_allow == "undefined"){
+		  if(typeof $localStorage.push_accepted == "undefined"){
 			var confirm_msg = 'Would Like to Send You Push Notifications';
 			utilityService.showConfirm("", confirm_msg, "Don't Allow", "OK")
 			.then(function(res) {
-				if(res) $localStorage.BMSPush_allow = true;
-				else $localStorage.BMSPush_allow = false;
+				if(res) $localStorage.push_accepted = 1;
+				else $localStorage.push_accepted = 0;
 			});
-		  }
-		  if(!$localStorage.BMSPush_allow) {
-			return $q.when(deviceId);
 		  }
 		  
 		  $window.BMSClient.initialize(BMSClient.REGION_US_SOUTH);
 		  
-		  // iOS Actionable notification options. Eg : {"category_Name":[{"identifier_name_1":"action_Name_1"},{"identifier_name_2":"action_Name_2"}]}
-		  // Pass empty for Android
 		  var category = {};
 		  $window.BMSPush.initialize(appGuid, clientSecret, category);
-
+		  
+		  var success = function(resp) {
+			console.log("BMS Push Registration Success Response:" + resp);
+			var deviceId = JSON.parse(resp).deviceId;
+			deferred.resolve(deviceId);
+		  };
+		  var failure = function(resp) {
+			console.log("BMS Push Registration Failure Response:" + resp);
+			deferred.reject(resp);
+		  };
+		  var showNotification = function(notif) {
+			console.log(JSON.stringify(notif));
+			$window.navigator.notification.alert(notif.message, function(){}, "Do me now", "ok");
+		  };		  
 		  setTimeout(function(){
-			//alert("call register")
-			var success = function(successResponse) {
-				console.log("You are registered for Push Notifications.");
-				console.log("BMS Success Response:" + successResponse);
-				var deviceId = JSON.parse(successResponse).deviceId;
-				deferred.resolve(deviceId);
-			};
-			var failure = function(failureResponse) {
-				console.log("BMS Something Went Wrong");
-				console.log("BMS Failure Response:" + failureResponse);
-				deferred.reject(failureResponse);
-			};
-			var options = {"userId": $localStorage.user_id};
-			
-			var showNotification = function(notif) {
-				console.log(JSON.stringify(notif));
-				$window.navigator.notification.alert(notif.message, function(){}, "Do me now", "ok");
-			};
-
+			//alert("call register");
+			var options = {};
 			$window.BMSPush.registerDevice(options, success, failure);
-			$window.BMSPush.registerNotificationsCallback(showNotification);
-		  }, 1000);
+			if($localStorage.push_accepted) {
+				$window.BMSPush.registerNotificationsCallback(showNotification);
+			}
+		  }, 500);
 		  deviceId = deferred.promise;
 		}
+		else {
+			var deviceId = "Web View";
+			$localStorage.push_accepted = 0;
+		}
+		$localStorage.device_id = deviceId;
 		return $q.when(deviceId);
 	};
 })
