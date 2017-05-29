@@ -5,5 +5,31 @@ node_modules/
 platforms/
 plugins/
 
-www/templates/
+www/templates/books.html
+www/templates/books.js
+www/templates/books-detail.html
+www/templates/books-detail.js
 
+www/templates/edit-more.html
+www/templates/edit-more.js
+
+www/templates/edit-short.html
+www/templates/edit-short.js
+
+www/templates/edit-user.html
+www/templates/edit-user.js
+
+www/templates/messages.html
+www/templates/messages.js
+www/templates/messages-detail.html
+www/templates/messages-detail.js
+
+www/templates/sms.html
+www/templates/sms.js
+www/templates/sms-detail.html
+www/templates/sms-detail.js
+
+www/templates/travel.html
+www/templates/travel.js
+www/templates/travel-detail.html
+www/templates/travel-detail.js

@@ -1,7 +1,7 @@
 var DomenowApp = angular.module('DomenowApp', 
 					['ionic', 'btford.socket-io', 'ngStorage',
 					'ngTouch', 'ngCordova', 'itemSwipePaneDirective'])
-DomenowApp.run(function($ionicPlatform, BluemixService, $window) {
+DomenowApp.run(function($ionicPlatform, BluemixService, $window, $localStorage) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -19,8 +19,9 @@ DomenowApp.run(function($ionicPlatform, BluemixService, $window) {
 	console.log("ionicPlatform ready>>>>>>>");
 	BluemixService.connect().then(function success(response) {
 		console.log("Bluemix app registered OK. The deviceID of this device is: " + response);
+		$localStorage.device_id = response;
 	}, function failure(response) {
-		console.log("Registering for Bluemix app push did not work");
+		console.log("Registering for Bluemix app push did not work" + response);
 	});
   });
 })

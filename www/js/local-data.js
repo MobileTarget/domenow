@@ -1319,5 +1319,29 @@ var samplePages = [
                 "a":	"detail content b"
 			}
 		]
+	},
+	{
+        "page_id": 12,
+        "task": {
+			"task_name": "Offline",
+            "template": {
+                "header": {
+                    "name": "Offline",
+                    "html": "<ion-header-bar class=\"bar-stable\">\n\t<button class=\"button button-icon\" ng-click=\"goPrevPage(prev_page_id)\">\n\t <i class=\"icon ion-ios-arrow-back\">Back</i>\n\t</button>\n\t<h1 class=\"title\">Offline</h1>\n</ion-header-bar>",
+                    "js": ""
+                },
+				"detail": {
+                    "name": "Offline notification",
+                    "html": "<ion-content padding=\"true\">\n\t<div class=\"wbox\" style=\"padding:30px;text-align:center;margin-top:80px;\">\n\t\t<h2>You are offline</h2>\n\t\t<div style=\"height: 40px;\" class=\"spacer\"></div>\n\t\t<p>Reconnect to the internet and try again.</p>\n\t</div>\n</ion-content>",
+                    "js": ""
+                },
+                "footer": {
+                    "name": "",
+                    "html": "",
+                    "js": ""
+                }
+            },
+            "date_created": "05/29/2017 6:43 PM"
+        }
 	}
 ];

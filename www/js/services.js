@@ -369,7 +369,7 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
 		  var showNotification = function(notif) {
 			console.log(JSON.stringify(notif));
 			$window.navigator.notification.alert(notif.message, function(){}, "Do me now", "ok");
-		  };		  
+		  };
 		  setTimeout(function(){
 			//alert("call register");
 			var options = {};
@@ -384,7 +384,6 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
 			var deviceId = "Web View";
 			$localStorage.push_accepted = 0;
 		}
-		$localStorage.device_id = deviceId;
 		return $q.when(deviceId);
 	};
 })

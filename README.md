@@ -23,9 +23,9 @@ Make sure you install the following tools and libraries.
 To create a Cordova application, use the Cordova Plugin for the IBM Bluemix Mobile Services Core SDK:
 
 1. Create a Cordova application
-1. Add Cordova platforms
-1. Add Cordova plugin
-1. Configure your platform 
+2. Add Cordova platforms
+3. Add Cordova plugin
+4. Configure your platform 
 
 <a name="init_application"></a>
 ## Installation
@@ -59,8 +59,9 @@ ionic platform add android
 Run the following command from your Cordova application's root directory to add the bms-core plugin:
 
 ```Bash
-ionic plugin add cordova-plugin-dialogs
 ionic plugin add cordova-plugin-console
+ionic plugin add cordova-plugin-dialogs
+ionic plugin add cordova-plugin-inappbrowser
 ionic plugin add bms-push
 ```
 

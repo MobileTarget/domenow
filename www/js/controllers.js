@@ -11,6 +11,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		page_id:		2,
 		from_page_id:	1,
 		task_id:		"2_0",
+		edit_task_id:	"",
 		task_name:		"Categories",
 		child_task_id:	"",
 	};
@@ -19,7 +20,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		order:	"asc",
 		key:	"name"
 	};
-
+	
 	$scope.user = {};
 	$scope.data = {};
 	$scope.html = "";
@@ -116,9 +117,9 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	};
 	$scope.goPage = function(page_id) {
 		utilityService.setBusy(true);
+		$scope.config.page_id = page_id;
 		console.log("go to page>>>"+ page_id);
 		//console.log("$scope.user_id>>>"+ $scope.user_id);
-		$scope.config.page_id = page_id;
 		//console.log($scope.config);
 		$scope.details = [];
 		$scope.data = {};
@@ -177,20 +178,6 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				});
 			}*/
 		}
-	};
-	$scope.getPage = function() {
-		utilityService.setBusy(true);
-		console.log("get page>>>"+ $scope.config.page_id);
-		//console.log("$scope.user_id>>>"+ $scope.user_id);
-		//console.log($scope.config);
-		$scope.details = [];
-		$scope.data = {};
-		
-		HttpService.getServerPage($scope.config.page_id).then(function(result) {
-			console.log("get server page response>>>", result);
-			myService.apiResult = result;
-			$scope.setPage();
-		});
 	};
 	$scope.updateGetUserTask = function() {
 		var update_interval = 36000000;
@@ -261,7 +248,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	
 	$scope.loadTemplate = function(){
 		$scope.config = {
-			page_id:		11,
+			page_id:		2,
 			from_page_id:	1,
 			task_id:		"2_0",
 			task_name:		'Categories'
@@ -276,14 +263,14 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}
 		}
 		$scope.setConfig();
-		var templateUrl = "templates/verify.html";
+		var templateUrl = "templates/common-handler.html";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			$scope.html = template;
 		}, function(err) {
 			
 		});
-		var templateUrl = "templates/verify.js";
+		var templateUrl = "templates/common-handler.js";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			eval(template);
@@ -315,7 +302,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		
 		var res_data = "";
 		var err_data = "";
-		api_type=api_type.toUpperCase();
+		api_type = api_type.toUpperCase();
 		switch(api_type) {
 			case "ADD_DETAIL": {
 				api_offline_queue = true;
@@ -359,10 +346,10 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}
 			case "URL": {
 				api_offline_queue = false;
-				api_offline_fn = "";
+				api_offline_fn = "$scope.goOffline()";
 				api_next_fn = "";
 				api_on_error_fn = "";
-				api_mode = "GET";
+				api_mode = "Other";
 				break;
 			}
 			case "UPDATE_MORE_INFO": {
@@ -399,7 +386,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}
 		}
 		var isOnline = HttpService.isOnline();
-		if(isOnline) {
+		if(isOnline) {//if network is online 
 			utilityService.setBusy(true, "Processing...");
 			var headers = {"Content-Type": "application/json"};
 			var config = {headers:headers};
@@ -432,8 +419,26 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 					utilityService.setBusy(false);
 				});
 			}
+			else if(api_mode == "OTHER") {
+				if(api_type == "URL") {
+					utilityService.setBusy(false);
+					
+					var url = request_data.url || "";
+					if(url) {
+						if(window.cordova) {
+							cordova.InAppBrowser.open(url, '_blank', 'location=yes');
+						}
+						else {
+							window.open(url, "_system");
+						}
+					}
+					else {
+						utilityService.showAlert("Warning: URL is missing.");
+					}
+				}
+			}
 			else {
-				console.log("warning: api_mode is missing.");
+				console.log("Warning: api_mode is missing.");
 				utilityService.setBusy(false);
 			}
 		}
@@ -483,6 +488,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	$scope.editDetails = function(item){
 		$scope.config.from_page_id = $scope.config.page_id;
 		$scope.config.task_name = item.name;
+		$scope.config.edit_task_id = $scope.config.task_id;
 		$scope.short_info = {
 			"detail_id": 	item.id,
 			"message":	 	item.name,
@@ -496,6 +502,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	$scope.moreDetails = function(item) {
 		$scope.config.from_page_id = $scope.config.page_id;
 		$scope.config.task_name = item.name;
+		$scope.config.edit_task_id = $scope.config.task_id;
 		var page_id = 16;
 		$scope.goPage(page_id);
 	};
@@ -510,6 +517,58 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		if(item_index != null) {
 			$scope.details.splice(item_index, 1);
 		}
+	};
+	$scope.getPage = function() {
+		utilityService.setBusy(true);
+		console.log("get page>>>"+ $scope.config.page_id);
+		//console.log("$scope.user_id>>>"+ $scope.user_id);
+		//console.log($scope.config);
+		$scope.details = [];
+		$scope.data = {};
+		
+		HttpService.getServerPage($scope.config.page_id).then(function(result) {
+			console.log("get server page response>>>", result);
+			myService.apiResult = result;
+			$scope.setPage();
+		});
+	};
+	$scope.goOffline = function() {
+		console.log("go to offline page");
+		$scope.prev_page_id = $scope.config.page_id;
+		
+		var offlineResult = {};
+		var page_id = 12;
+		for(ind=0;ind<samplePages.length;ind++){
+			if(samplePages[ind].page_id == page_id){
+				offlineResult = samplePages[ind];
+				break;
+			}
+		}
+		var header_html = offlineResult.task.template.header.html;
+		var detail_html = offlineResult.task.template.detail.html;
+		var footer_html = offlineResult.task.template.footer.html;
+		$scope.html = header_html + detail_html + footer_html;
+		
+		var js_template = offlineResult.task.template.header.js;
+		eval(js_template);
+		/*
+		var templateUrl = "templates/offline.html";
+		$templateRequest(templateUrl).then(function(template) {
+			$scope.html = template;
+		}, function(err) {
+			
+		});
+		var templateUrl = "templates/offline.js";
+		$templateRequest(templateUrl).then(function(template) {
+			eval(template);
+		}, function(err) {
+			
+		});*/
+	};
+	$scope.goPrevPage = function(prev_page_id) {
+		console.log("go to prev page>>> id:" + prev_page_id);
+		$scope.config.page_id = prev_page_id;
+		$scope.setPage();
 	};
 	$scope.mark_detail_pending = function(request_data) {
 		console.log("detail pending");
