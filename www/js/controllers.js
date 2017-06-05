@@ -44,7 +44,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		$scope.is_test = true;
 		$scope.is_test = false;
 		$scope.is_template = true;
-		$scope.is_template = false;
+		//$scope.is_template = false;
 		if($scope.is_template){
 			$scope.loadTemplate();
 		}
@@ -77,15 +77,19 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			};
 			myDetail.push(temp);
 		}
-		$scope.details = utilityService.sortByKey(myDetail, $scope.sort.key, $scope.sort.order);
+		$scope.details = myDetail;
+		$scope.sort.order = ($scope.sort.order == "asc")?"desc":"asc";
+		$scope.sortDetail();
 	};
 	$scope.setConfig = function() {
 		var task_info = myService.getTaskInfo();
-		$scope.config.from_page_id = task_info.from_page_id;
+		if(task_info.from_page_id) {
+			$scope.config.from_page_id = task_info.from_page_id;
+		}
 		$scope.config.task_id = task_info.task_id;
 		$scope.config.task_name = task_info.task_name;
 		$scope.config.child_task_id = task_info.child_task_id;
-		console.log("$scope.config>>>", $scope.config);
+		console.log("$scope.config>>>" + JSON.stringify($scope.config));
 		
 		$scope.title = $scope.config.task_name;
 		var user_info = myService.getUserInfo();
@@ -118,7 +122,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	$scope.goPage = function(page_id) {
 		utilityService.setBusy(true);
 		$scope.config.page_id = page_id;
-		console.log("go to page>>>"+ page_id);
+		console.log("go to page>>>"+ JSON.stringify(page_id));
 		//console.log("$scope.user_id>>>"+ $scope.user_id);
 		//console.log($scope.config);
 		$scope.details = [];
@@ -248,10 +252,10 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	
 	$scope.loadTemplate = function(){
 		$scope.config = {
-			page_id:		2,
+			page_id:		31,
 			from_page_id:	1,
-			task_id:		"2_0",
-			task_name:		'Categories'
+			task_id:		"31_0",
+			task_name:		'Paradise Lost'
 		};
 		console.log("template page>>>"+ $scope.config.page_id);
 		
@@ -263,14 +267,14 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}
 		}
 		$scope.setConfig();
-		var templateUrl = "templates/common-handler.html";
+		var templateUrl = "templates/books-detail.html";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			$scope.html = template;
 		}, function(err) {
 			
 		});
-		var templateUrl = "templates/common-handler.js";
+		var templateUrl = "templates/books-detail.js";
 		$templateRequest(templateUrl).then(function(template) {
 			//console.log(template)
 			eval(template);
@@ -307,7 +311,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			case "ADD_DETAIL": {
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
-				api_next_fn = "$scope.getPage()";
+				api_next_fn = api_next_fn || "$scope.getPage()";
 				api_on_error_fn = "add_error_fn";
 				api_mode = "POST";
 				break;
@@ -315,14 +319,14 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			case "DELETE_DETAIL": {
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
-				api_next_fn = "$scope.deleteDetail(request_data)";
+				api_next_fn = api_next_fn || "$scope.deleteDetail(request_data)";
 				api_on_error_fn = "$scope.delete_error_fn(request_data, err_data)";
 				api_mode = "POST";
 				break;
 			}
 			case "GET_PAGE": {
 				api_offline_queue = false;
-				api_offline_fn = "mark_page_pending";
+				api_offline_fn = "$scope.goOffline()";
 				api_next_fn = "";
 				api_on_error_fn = "get_error_fn";
 				api_mode = "GET";
@@ -330,7 +334,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}	
 			case "UPDATE_GET_USER_TASK": {
 				api_offline_queue = false;
-				api_offline_fn = "";
+				api_offline_fn = "$scope.goOffline()";
 				api_next_fn = "";
 				api_on_error_fn = "";
 				api_mode = "GET";
@@ -338,7 +342,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			}	
 			case "UPDATE_GET_PAGES": {
 				api_offline_queue = false;
-				api_offline_fn = "";
+				api_offline_fn = "$scope.goOffline()";
 				api_next_fn = "";
 				api_on_error_fn = "";
 				api_mode = "GET";
@@ -349,13 +353,13 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_fn = "$scope.goOffline()";
 				api_next_fn = "";
 				api_on_error_fn = "";
-				api_mode = "Other";
+				api_mode = "OTHER";
 				break;
 			}
 			case "UPDATE_MORE_INFO": {
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
-				api_next_fn = "$scope.getPage()";
+				api_next_fn = api_next_fn || "$scope.getPage()";
 				api_on_error_fn = "add_error_fn";
 				api_mode = "POST";
 				break;
@@ -363,7 +367,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			case "UPDATE_USER_DETAILS": {
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
-				api_next_fn = "$scope.getPage()";
+				api_next_fn = api_next_fn || "$scope.getPage()";
 				api_on_error_fn = "add_error_fn";
 				api_mode = "POST";
 				break;
@@ -371,17 +375,17 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			case "UPDATE_EDIT_SHORT_DETAIL": {
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
-				api_next_fn = "$scope.getPage()";
+				api_next_fn = api_next_fn || "$scope.getPage()";
 				api_on_error_fn = "add_error_fn";
 				api_mode = "POST";
 				break;
 			}
 			default: {
 				api_offline_queue = false;
-				api_offline_fn = "";
-				api_next_fn = '$scope.defaultNextFn(request_data, res_data)';
+				api_offline_fn = "$scope.goOffline()";
+				api_next_fn = api_next_fn || '$scope.defaultNextFn(request_data, res_data)';
 				api_on_error_fn = "";
-				api_mode = "GET";
+				api_mode = "OTHER";
 				break;
 			}
 		}
@@ -389,7 +393,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		if(isOnline) {//if network is online 
 			utilityService.setBusy(true, "Processing...");
 			var headers = {"Content-Type": "application/json"};
-			var config = {headers:headers};
+			var config = {headers: headers};
 			api_mode = api_mode.toUpperCase();
 			if(api_mode == "POST"){
 				$http.post(api_url, request_data, config).then(function(res) {
@@ -476,8 +480,10 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		var page_id = 14;
 		$scope.goPage(page_id);
 	};
-	$scope.sortDetail = function() {console.log("$scope.sort>>>", $scope.sort);
+	$scope.sortDetail = function() {
 		$scope.sort.order = ($scope.sort.order == "asc")?"desc":"asc";
+		console.log("$scope.sort>>>", $scope.sort);
+		
 		$scope.details = utilityService.sortByKey($scope.details, $scope.sort.key, $scope.sort.order);
 	};
 	$scope.subDetails = function(item){
@@ -517,6 +523,12 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		if(item_index != null) {
 			$scope.details.splice(item_index, 1);
 		}
+	};
+	$scope.goSearch = function() {
+		$scope.config.from_page_id = $scope.config.page_id;
+		$scope.config.edit_task_id = $scope.config.task_id;
+		var page_id = 17;
+		$scope.goPage(page_id);
 	};
 	$scope.getPage = function() {
 		utilityService.setBusy(true);

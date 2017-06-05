@@ -18,15 +18,16 @@ $scope.verify = function(user){
 	console.log("verification config params>>>"+JSON.stringify(config));
 	$http.get(endpoint, config).then(function(res) {
 		var res_data = res.data;
-		console.log("verification res_data>>>"+JSON.stringify(config));
+		console.log("verification res_data>>>"+JSON.stringify(res_data));
 		myService.apiResult = res_data;
 		if (res_data.status == "valid") {
 			$localStorage.user_id = res_data.user_id;
 			$scope.goPage(res_data.page_id);
 		}
 		else {
-			utilityService.showAlert("Invalid Code");
-			$scope.goPage(res_data.page_id);
+			utilityService.showAlert("Invalid Code").then(function(res) {
+				$scope.goPage(res_data.page_id);
+			});
 		}
 	});
 };

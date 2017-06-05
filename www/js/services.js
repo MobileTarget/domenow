@@ -1,4 +1,4 @@
-DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
+DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup, $loading){
 	var appName = "Do me now";
 	this.sortByKey = function(array, key, order) {
 		return array.sort(function(a, b) {
@@ -32,13 +32,27 @@ DomenowApp.service('utilityService', function($ionicLoading, $ionicPopup){
 		return confirmPopup;
 	};
 	this.busyState = false;
-	this.setBusy = function(state, message) {
+	this.setBusy = function(state, message, key) {
 		if (state === this.busyState) {
 		  return;
 		}
+		var key = key || "loading";
 		this.busyState = state;
-
 		if (this.busyState) {
+		  var text = message || 'Loading...';
+		  $loading.start(key);
+		  $loading.setDefaultOptions({active: true, text: text})
+		} else {
+		  $loading.finish(key);
+		}
+	};
+	this.loadingState = false;
+	this.setLoading = function(state, message) {
+		if (state === this.loadingState) {
+		  return;
+		}
+		this.loadingState = state;
+		if (this.loadingState) {
 		  $ionicLoading.show({template: message || 'Loading...'});
 		} else {
 		  $ionicLoading.hide();

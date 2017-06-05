@@ -182,17 +182,19 @@ var samplePages = [
 	},
 	{
         "page_id": 3,
-        "user":{
-            "user_id":			"2",
-            "access_token":		"1489106288366.re75jssjwrbpgb9",
-            "security_level":	1,
-            "phone":			123456,
-            "firstname": 		"roger",
-            "image":			"img/userimagedfdff"
-        },
+		"user": {
+			"user_id": "005c5e1411d38352a4fda07ffd565685",
+			"firstname": "",
+			"lastname": "",
+			"email": "",
+			"phone": "",
+			"virtual_phone": 8164,
+			"type": {}
+		},
         "task": {
-			"task_name": "Books",
 			"task_id": "3_0",
+			"task_name": "Books",
+			"parent_id": "2_0",
             "template": {
                 "header": {
                     "name": "Books",
@@ -211,136 +213,173 @@ var samplePages = [
                 }
             },
 			"from_page_id": 2,
-            "date_created": "1/26/2017 5:05 PM"
+			"child_task_id": "80f37beb644eb8e365422286f051b5ca",
+			"date_created": "2017-03-15T10:29:39.453Z"
         },
         "detail": [
 			{
-				"_id": 				"3_1",
-                "image":			"img/taskimage1",
-                "to_page_id": 		31,
-                "user_id": 			"2",
-                "from_user_id": 	"1",
-				"user_incoming":	{
-					"message":	"Paradise Lost"
-				},
-                "watson_incoming":	{},
-				"type":				{"public":"public"},
-                "date_created":		"1/26/2017 5:17 PM",
-                "from_user": 		{},
-				"count": 			{"active":0, "unread":0},
-                "a":				"detail content b"
+			  "_id": "3_1",
+			  "image": "",
+			  "to_page_id": 31,
+			  "user_id": "23d5c58422026c68269cd6e9ac22ca4a",
+			  "task_id": "3_0",
+			  "page_id": 3,
+			  "from_user_id": "9092618242e9895441bc9e978fa15098",
+			  "user_incoming": {
+				"message": "Paradise Lost"
+			  },
+			  "watson_incoming": {},
+			  "type": {
+				"public": "public"
+			  },
+			  "date_created": "",
+			  "from_user": {},
+			  "count": {
+				"active": 3,
+				"unread": 0
+			  }
 			},
 			{
-				"_id": 	"3_2",
-                "image":		"img/taskimage1",
-                "to_page_id": 	32,
-                "user_id": 		"2",
-                "from_user_id": "1",
-                "user_incoming":{
-					"message":	"The Lean Startup"
-				},
-                "watson_incoming":{},
-                "date_created":	"1/26/2017 5:17 PM",
-                "from_user":{},
-				"count":{"active":1, "unread":0},
-                "a":	"detail content b"
-			},
-			{
-              "_id": 	"3_3",
-                "image":		"img/taskimage1",
-                "to_page_id": 	32,
-                "user_id": 		"2",
-                "from_user_id": "1",
-                "user_incoming":{
-					"message":	"Test Books"
-				},
-                "watson_incoming":{},
-                "date_created":	"1/26/2017 5:17 PM",
-                "from_user":{},
-				"count":{"active":4, "unread":3},
-                "a":	"detail content b"
+			  "_id": "3_2",
+			  "image": "",
+			  "to_page_id": 32,
+			  "user_id": "23d5c58422026c68269cd6e9ac22ca4a",
+			  "task_id": "3_0",
+			  "page_id": 3,
+			  "from_user_id": "9092618242e9895441bc9e978fa15098",
+			  "user_incoming": {
+				"message": "The Lean Startup"
+			  },
+			  "watson_incoming": {},
+			  "type": {
+				"public": "public"
+			  },
+			  "date_created": "",
+			  "from_user": {},
+			  "count": {
+				"active": 3,
+				"unread": 0
+			  }
 			}
 		]
 	},
 	{
         "page_id": 31,
-        "user":{
-            "user_id":			"2",
-            "access_token":		"1489106288366.re75jssjwrbpgb9",
-            "security_level":	1,
-            "phone":			123456,
-            "firstname": 		"roger",
-            "image":			"img/userimagedfdff"
-        },
+        "user": {
+			"user_id": "005c5e1411d38352a4fda07ffd565685",
+			"firstname": "",
+			"lastname": "",
+			"email": "",
+			"phone": "",
+			"virtual_phone": 8164,
+			"type": {}
+		},
         "task": {
-            "task_id": "31_0",
+			"task_id": "31_0",
 			"task_name": "Paradise Lost",
+			"parent_id": "3_0",
 			"template": {
-                "header": {
-                    "name": "",
-                    "html": "<ion-header-bar class=\"bar-stable\">\n\t<button class=\"button button-icon\" ng-click=\"goPage(config.from_page_id)\">\n\t <i class=\"icon ion-ios-arrow-back\">Back</i>\n\t</button>\n\t<h1 class=\"title\">{{title}}</h1>\n\t<button class=\"button button-icon\" ng-click=\"toggleDate()\">\n\t <i ng:class=\"(sort=='desc')?'icon ion-arrow-up-c':'icon ion-arrow-down-c'\"></i>\n\t</button>\n</ion-header-bar>",
-                    "js": "$scope.sort = \"asc\";\n$scope.sortKey = \"date_created\";\n$scope.messages = [];\n$scope.hideTime = false;\n$scope.typingStateStr = \". . .\";\n$scope.myMsgTypeStr = \"mine\";\n\nvar task_info = myService.getTaskInfo();\n//$scope.config.page_id;\n$scope.config.from_page_id = task_info.from_page_id;\n$scope.config.task_id = task_info.task_id;\n$scope.config.task_name = task_info.task_name;\nconsole.log(\"$scope.config>>>\", $scope.config);\n$scope.title = $scope.config.task_name;\nthis.getDetail = function() {\n\tvar detailData = myService.getDetail();\n\t//console.log(\"detailData>>>\", detailData);\n\tvar myDetail = [];\n\tfor (var ind = 0; ind<detailData.length; ind++) {\n\t\tvar item = detailData[ind];\n\t\tvar msg_type = \"\";\n\t\tvar message = \"\";\n\t\tif(typeof item.user_id == $localStorage.user_id){\n\t\t\tmsg_type = \"mine\";\n\t\t\tmessage = item.user_incoming.message;\n\t\t}\n\t\telse {\n\t\t\tmsg_type = \"other\";\n\t\t\tmessage = item.user_incoming.message;\n\t\t}\n\t\t//if(typeof message !=\"undefined\"){\n\t\t\tvar temp = {\n\t\t\t\t\"detail_id\":\titem._id,\n\t\t\t\t\"type\":\t\t\tmsg_type,\n\t\t\t\t\"message\":\t\tmessage,\n\t\t\t\t\"date_created\":\titem.date_created\n\t\t\t};\n\t\t\tmyDetail.push(temp);\n\t\t//}\n\t}\n\t$scope.messages = utilityService.sortByKey(myDetail, $scope.sortKey, $scope.sort);\n};\nthis.getDetail();\n$scope.toggleDate = function() {\n\t$scope.sort = ($scope.sort == \"asc\")?\"desc\":\"asc\";\n\t$scope.messages = utilityService.sortByKey($scope.messages, $scope.sortKey, $scope.sort);\n};\n$scope.add_msg_from_sub_category = function() {\n\t//console.log($scope.data.message);\n\tvar endpoint = \"https://platform.mybluemix.net/add_detail\";\n\tvar postdata = {\n\t\tuser_id:\t\t$localStorage.user_id,\n\t\taccess_token: \t$localStorage.access_token,\n\t\tnote: \t\t\t$scope.data.message,\n\t\ttask_name:\t\t$scope.config.task_name,\n\t\tpage_id:\t\t$scope.config.page_id,\n\t\tfrom_page_id:\t$scope.config.from_page_id\n\t};\n\t//console.log(postdata);return true;\n\tutilityService.setBusy(true, \"Sending...\");\n\tvar headers = {\"Content-Type\": \"application/json\"};\n\tvar config = {headers:headers};\n\t$http.post(endpoint, postdata, config).then(function(res) {\n\t\tvar res_data = res.data;\n\t\tconsole.log(\"res_data>>>\",res_data);\n\t\t\n\t\tvar msg_data = {\n\t\t\t\"detail_id\":\tres_data._id,\n\t\t\t\"type\":\t\t\t\"mine\",\n\t\t\t\"message\":\t\tres_data.user_incoming.message,\n\t\t\t\"date_created\":\tres_data.date_created\n\t\t};\n\t\t$scope.messages.push(msg_data);\n\t\tutilityService.setBusy(false);\n\t},function(err) {\n\t\tconsole.log(\"err>>>\",err);\n\t\tutilityService.setBusy(false);\n\t});\n\tdelete $scope.data.message;\n};"
-                },
-				"detail": {
-                    "name": "Message list",
-                    "html": "<ion-content class=\"content-stable\"\n\t\t on-swipe-left=\"hideTime = false\"\n\t\t on-swipe-right=\"hideTime = true\">\n\t<div ng-repeat=\"message in messages\"\n\t ng-class=\"{other: message.type != myMsgTypeStr}\" class=\"messages\">\n\t\t<div class=\"message\">\n\t\t\t<p class=\"chat-typing\" ng-show=\"message.message==typingStateStr\">{{message.username}}</p>\n\t\t\t<span >{{ message.message }}</span>\n\t\t</div>\n\t</div>\n</ion-content>",
-                    "js": ""
-                },
-                "footer": {
-                    "name": "",
-                    "html": "<ion-footer-bar keyboard-attach class=\"bar-stable item-input-inset\">\n\t<form name=\"sendMessageForm\" class=\"sendmessage\" ng-submit=\"add_msg_from_sub_category()\" novalidate>\n\t\t<label class=\"item-input-wrapper\">\n\t\t\t<input type=\"text\" placeholder=\"New Message\" ng-model=\"data.message\" ng-change=\"updateTyping()\" on-return=\"closeKeyboard()\" on-focus=\"inputUp()\" on-blur=\"inputDown()\" />\n\t\t</label>\n\t\t<div class=\"footer-btn-wrap\">\n\t\t\t<button type=\"submit\" class=\"button footer-btn\"\n\t\t\t\tng-disabled=\"!data.message\">Send\n\t\t\t</button>\n\t\t</div>\n\t</form>\n</ion-footer-bar>",
-                    "js": ""
-                }
-            },
+			  "header": {
+				"_id": "31_h",
+				"_rev": "3-82b4e111d96e9cb256b19a163e0e8244",
+				"table": "template",
+				"name": "",
+				"html": "<ion-header-bar class=\"bar-stable\">\n\t<button class=\"button button-icon\" ng-click=\"goPage(3)\">\n\t <i class=\"icon ion-ios-arrow-back\">Back</i>\n\t</button>\n\t<h1 class=\"title\">{{title}}</h1>\n\t<button class=\"button button-icon\" ng-click=\"toggleDate()\">\n\t <i ng:class=\"(sort=='desc')?'icon ion-arrow-up-c':'icon ion-arrow-down-c'\"></i>\n\t</button>\n</ion-header-bar>",
+				"js": "$scope.sort.order = \"asc\";\n$scope.sort.key = \"date_created\";\n$scope.messages = [];\n$scope.hideTime = false;\n$scope.typingStateStr = \". . .\";\n$scope.myMsgTypeStr = \"mine\";\n\nvar task_info = myService.getTaskInfo();\n$scope.config.from_page_id = task_info.from_page_id;\n$scope.config.task_id = task_info.task_id;\n$scope.config.task_name = task_info.task_name;\n$scope.title = $scope.config.task_name;\n\nthis.getDetail = function() {\n\tvar detailData = myService.getDetail();\n\tvar myDetail = [];\n\tfor (var ind = 0; ind<detailData.length; ind++) {\n\t\tvar item = detailData[ind];\n\t\tvar msg_type = \"\";\n\t\tvar message = \"\";\n\t\tif(typeof item.user_id == $localStorage.user_id){\n\t\t\tmsg_type = \"mine\";\n\t\t\tmessage = item.user_incoming.message;\n\t\t}\n\t\telse {\n\t\t\tmsg_type = \"other\";\n\t\t\tmessage = item.user_incoming.message;\n\t\t}\n\t\tvar temp = {\n\t\t\t\"detail_id\":\titem._id,\n\t\t\t\"type\":\t\t\tmsg_type,\n\t\t\t\"message\":\t\tmessage,\n\t\t\t\"date_created\":\titem.date_created\n\t\t};\n\t\tmyDetail.push(temp);\n\t}\n\t$scope.messages = utilityService.sortByKey(myDetail, $scope.sortKey, $scope.sort);\n};\nthis.getDetail();\n\n$scope.toggleDate = function() {\n\t$scope.sort = ($scope.sort == \"asc\")?\"desc\":\"asc\";\n\t$scope.messages = utilityService.sortByKey($scope.messages, $scope.sortKey, $scope.sort);\n};\n\n$scope.add_msg_from_sub_category = function() {\n\tvar endpoint = \"http://platform.mybluemix.net/api_handler\" ,\n\t\tpostdata = {\n\t\t\t\"type\": \"add_detail\",\n\t\t\t\"body\": {\n\t\t\t\t\"user_id\":\t\t\t$localStorage.user_id,\n\t\t\t\t\"access_token\": \t$localStorage.access_token,\n\t\t\t\t\"note\": \t\t\t$scope.data.message,\n\t\t\t\t\"task_id\":\t\t \ttask_info.task_id,\n\t\t\t\t\"page_id\":\t\t\t$scope.config.page_id,\n\t\t\t\t\"from_page_id\":\t\t$scope.config.from_page_id\n\t\t\t}\n\t\t};\n\tutilityService.setBusy(true, \"Sending...\");\n\tvar headers = {\"Content-Type\": \"application/json\"};\n\tvar config = {headers:headers};\n\t$http.post(endpoint, postdata, config).then(function(res) {\n\t\tvar res_data = res.data;\n\t\tconsole.log(\"res_data>>>\",res_data);\n\t\t\n\t\tvar msg_data = {\n\t\t\t\"detail_id\":\tres_data._id,\n\t\t\t\"type\":\t\t\t\"mine\",\n\t\t\t\"message\":\t\tres_data.user_incoming.message,\n\t\t\t\"date_created\":\tres_data.date_created\n\t\t};\n\t\t$scope.messages.push(msg_data);\n\t\tutilityService.setBusy(false);\n\t},function(err) {\n\t\tconsole.log(\"err>>>\",err);\n\t\tutilityService.setBusy(false);\n\t});\n\tdelete $scope.data.message;\n};"
+			  },
+			  "detail": {
+				"_id": "31_d",
+				"_rev": "2-437406201ae1d2ca6e918cab40d5ee00",
+				"table": "template",
+				"name": "Message list",
+				"html": "<ion-content class=\"content-stable\"\n\t\t on-swipe-left=\"hideTime = false\"\n\t\t on-swipe-right=\"hideTime = true\">\n\t<div ng-repeat=\"message in messages\"\n\t ng-class=\"{other: message.type != myMsgTypeStr}\" class=\"messages\">\n\t\t<div class=\"message\">\n\t\t\t<p class=\"chat-typing\" ng-show=\"message.message==typingStateStr\">{{message.username}}</p>\n\t\t\t<span >{{ message.message }}</span>\n\t\t</div>\n\t</div>\n</ion-content>",
+				"js": ""
+			  },
+			  "footer": {
+				"_id": "31_f",
+				"_rev": "3-00c894d09f4319f708a48e4ac4a4ce0a",
+				"table": "template",
+				"name": "",
+				"html": "<ion-footer-bar keyboard-attach class=\"bar-stable item-input-inset\">\n\t<form name=\"sendMessageForm\" class=\"sendmessage\"\n\t\tng-submit=\"\tparams = {\n\t\t\t\t\t\tapi_type: 'ADD_DETAIL',\n\t\t\t\t\t\ttable: 'add_detail',\n\t\t\t\t\t\ttable_data: {\n\t\t\t\t\t\t\tnote:\t\tdata.message,\n\t\t\t\t\t\t\ttask_id:\tconfig.task_id,\n\t\t\t\t\t\t\ttask_name:\tconfig.task_name,\n\t\t\t\t\t\t\tpage_id:\tconfig.page_id,\n\t\t\t\t\t\t\tfrom_page_id: config.from_page_id\n\t\t\t\t\t\t}\n\t\t\t\t\t};\n\t\t\t\t\tcommon_request_handler(params)\">\n\t\t<label class=\"item-input-wrapper\">\n\t\t\t<input type=\"text\" placeholder=\"{{config.task_name}} message\" ng-model=\"data.message\" ng-change=\"updateTyping()\" on-return=\"closeKeyboard()\" on-focus=\"inputUp()\" on-blur=\"inputDown()\" />\n\t\t</label>\n\t\t<div class=\"footer-btn-wrap\">\n\t\t\t<button type=\"submit\" class=\"button footer-btn\"\n\t\t\t\tng-disabled=\"!data.message\">Submit\n\t\t\t</button>\n\t\t</div>\n\t</form>\n</ion-footer-bar>\n\n\n",
+				"js": ""
+			  }
+			},
 			"from_page_id": 3,
-            "to_page_id": 	0,
-            "date_created": "1/26/2017 5:05 PM"
-        },
+			"child_task_id": "ea1f86fe7bb573a145fb8e66ab08c49e",
+			"date_created": "2017-03-15T10:29:39.453Z"
+		},
         "detail": [
 			{
-              "_id": 			1,
-                "image":		"img/taskimage1",
-                "page_id": 		31,
-                "user_id": 		"1",
-                "from_user_id": "1",
-                "user_incoming":{
-					"message":	"mine message will be userincoming and the others will be wastonincoming?"
-				},
-                "watson_incoming":{},
-                "date_created":	"1/26/2017 5:17 PM",
-                "from_user":{},
-                "a":	"detail content b"
+			  "_id": "31_1",
+			  "image": "",
+			  "to_page_id": 31,
+			  "user_id": "23d5c58422026c68269cd6e9ac22ca4a",
+			  "task_id": "31_0",
+			  "page_id": 31,
+			  "from_user_id": "9092618242e9895441bc9e978fa15098",
+			  "user_incoming": {
+				"message": "mine message will be userincoming and the others will be wastonincoming?"
+			  },
+			  "watson_incoming": {},
+			  "type": {
+				"public": "public"
+			  },
+			  "date_created": "1/26/2017 5:17 PM",
+			  "from_user": {},
+			  "count": {
+				"active": 3,
+				"unread": 0
+			  }
 			},
 			{
-               "_id": 	2,
-                "image":		"img/taskimage1",
-                "page_id": 		31,
-                "user_id": 		"5f490c0ae2ee7321dc891a3e59bd64c6",
-                "from_user_id": "1",
-                "user_incoming":{"message":	"Yes a field inside there called message"},
-                "watson_incoming":{},
-				"type": {
-					"public": "public"
-				  },
-                "date_created":	"1/26/2017 6:27 PM",
-                "from_user":{},
-                "a":	"detail content b"
+			  "_id": "31_2",
+			  "image": "",
+			  "to_page_id": 31,
+			  "user_id": "23d5c58422026c68269cd6e9ac22ca4a",
+			  "task_id": "31_0",
+			  "page_id": 31,
+			  "from_user_id": "9092618242e9895441bc9e978fa15098",
+			  "user_incoming": {
+				"message": "Yes a field inside there called message"
+			  },
+			  "watson_incoming": {
+				"message": "Yes a field inside there called message"
+			  },
+			  "type": {
+				"public": "public"
+			  },
+			  "date_created": "1/26/2017 6:27 PM",
+			  "from_user": {},
+			  "count": {
+				"active": 3,
+				"unread": 0
+			  }
 			},
 			{
-               "_id": 	3,
-                "image":		"img/taskimage1",
-                "page_id": 		31,
-                "user_id": 		"3",
-                "from_user_id": "1",
-                "user_incoming":{
-					"message":	"So just field changes and HTML changes."
-				},
-                "watson_incoming":{},
-                "date_created":	"1/26/2017 7:11 PM",
-                "from_user":{},
-                "a":	"detail content b"
+			  "_id": "31_3",
+			  "image": "",
+			  "to_page_id": 31,
+			  "user_id": "23d5c58422026c68269cd6e9ac22ca4a",
+			  "task_id": "31_0",
+			  "page_id": 31,
+			  "from_user_id": "9092618242e9895441bc9e978fa15098",
+			  "user_incoming": {
+				"message": "So just field changes and HTML changes."
+			  },
+			  "watson_incoming": {
+				"message": "So just field changes and HTML changes."
+			  },
+			  "type": {
+				"public": "public"
+			  },
+			  "date_created": "1/26/2017 7:11 PM",
+			  "from_user": {},
+			  "count": {
+				"active": 3,
+				"unread": 0
+			  }
 			}
-		]
+		  ]
 	},
 	{
         "page_id": 32,
@@ -867,15 +906,23 @@ var samplePages = [
 	{
         "page_id": 6,
         "user":{
-            "user_id":			"2",
-            "access_token":		"1489106288366.re75jssjwrbpgb9",
-            "security_level":	1,
-            "phone":			123456,
-            "firstname": 		"roger",
-            "image":			"img/userimagedfdff"
+            "user_id": "37249ab4728dd103f714e83f49f1a129",
+			"firstname": "",
+			"lastname": "",
+			"email": "",
+			"phone": 11234,
+			"virtual_phone": 11234,
+			"type": {
+			  "public": "public"
+			}
         },
         "task": {
-			"task_name": "SMS",
+			"task_id": "6_0",
+			"task_name": "Chat",
+			"parent_id": "2_0",
+			"from_page_id": 2,
+			"child_task_id": "ea1f86fe7bb573a145fb8e66ab08c49e",
+			"date_created": "2017-03-15T10:29:39.453Z",
             "template": {
                 "header": {
                     "name": "SMS",
@@ -892,52 +939,72 @@ var samplePages = [
                     "html": "<ion-footer-bar keyboard-attach class=\"bar-stable item-input-inset\">\n\r<form name=\"sendMessageForm\" class=\"sendmessage\" ng-submit=\"addDetail()\" novalidate>\n\r<label class=\"item-input-wrapper\">\n\r<input type=\"text\" placeholder=\"Type your message\" ng-model=\"data.message\" ng-change=\"updateTyping()\" on-return=\"closeKeyboard()\" on-focus=\"inputUp()\" on-blur=\"inputDown()\" />\n\r</label>\n\r<div class=\"footer-btn-wrap\">\n\r<button type=\"submit\" class=\"button button-icon icon ion-ios-paperplane footer-btn\"\n\rng-disabled=\"!data.message\">\n\r</button>\n\r</div>\n\r</form>\n\r</ion-footer-bar>",
                     "js": ""
                 }
-            },
-			"from_page_id": 2,
-            "date_created": "1/26/2017 5:05 PM"
+            }
         },
         "detail": [
 			{
-                "_id": 	1,
-                "image":		"img/taskimage1",
-                "to_page_id": 	61,
-                "user_id": 		"2",
-                "from_user_id": "1",
-                "user_incoming":{
-					"message":	"Adam"
-				},
-                "watson_incoming":{},
-                "date_created":	"1/26/2017 5:05 PM",
-                "from_user":{},
-                "a":	"detail content b"
+			  "_id": "6_1",
+			  "image": "",
+			  "to_page_id": 61,
+			  "user_id": "23d5c58422026c68269cd6e9ac22ca4a",
+			  "task_id": "6_0",
+			  "page_id": 6,
+			  "from_user_id": "9092618242e9895441bc9e978fa15098",
+			  "user_incoming": {
+				"message": "Adam"
+			  },
+			  "watson_incoming": {},
+			  "type": {},
+			  "date_created": "1/26/2017 5:05 PM",
+			  "from_user": {},
+			  "count": {
+				"active": 3,
+				"unread": 0
+			  }
 			},
 			{
-               "_id": 	2,
-                "image":		"img/taskimage1",
-                "to_page_id": 	62,
-                "user_id": 		"2",
-                "from_user_id": "1",
-                "user_incoming":{
-					"message":	"Ben"
-				},
-                "watson_incoming":{},
-                "date_created": "1/26/2017 6:06 PM",
-                "from_user":{},
-                "a":	"detail content b"
+			  "_id": "6_2",
+			  "image": "img/adam.jpg",
+			  "to_page_id": 62,
+			  "user_id": "23d5c58422026c68269cd6e9ac22ca4a",
+			  "task_id": "6_0",
+			  "page_id": 6,
+			  "from_user_id": "9092618242e9895441bc9e978fa15098",
+			  "user_incoming": {
+				"message": "Ben"
+			  },
+			  "watson_incoming": {},
+			  "type": {
+				"public": "public"
+			  },
+			  "date_created": "1/26/2017 6:06 PM",
+			  "from_user": {},
+			  "count": {
+				"active": 3,
+				"unread": 0
+			  }
 			},
 			{
-               "_id": 	2,
-                "image":		"img/taskimage1",
-                "to_page_id": 	63,
-                "user_id": 		"2",
-                "from_user_id": "1",
-                "user_incoming":{
-					"message":	"Clemens"
-				},
-                "watson_incoming":{},
-                "date_created": "1/26/2017 7:07 PM",
-                "from_user":{},
-                "a":	"detail content b"
+			  "_id": "6_3",
+			  "image": "img/adam.jpg",
+			  "to_page_id": 63,
+			  "user_id": "23d5c58422026c68269cd6e9ac22ca4a",
+			  "task_id": "6_0",
+			  "page_id": 6,
+			  "from_user_id": "9092618242e9895441bc9e978fa15098",
+			  "user_incoming": {
+				"message": "Clemens"
+			  },
+			  "watson_incoming": {},
+			  "type": {
+				"public": "public"
+			  },
+			  "date_created": "1/26/2017 7:07 PM",
+			  "from_user": {},
+			  "count": {
+				"active": 3,
+				"unread": 0
+			  }
 			}
 		]
 	},

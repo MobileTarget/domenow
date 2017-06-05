@@ -1,5 +1,5 @@
 var DomenowApp = angular.module('DomenowApp', 
-					['ionic', 'btford.socket-io', 'ngStorage',
+					['ionic', 'btford.socket-io', 'ngStorage', 'darthwade.dwLoading',
 					'ngTouch', 'ngCordova', 'itemSwipePaneDirective'])
 DomenowApp.run(function($ionicPlatform, BluemixService, $window, $localStorage) {
   $ionicPlatform.ready(function() {
