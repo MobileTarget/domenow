@@ -44,7 +44,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		$scope.is_test = true;
 		$scope.is_test = false;
 		$scope.is_template = true;
-		//$scope.is_template = false;
+		$scope.is_template = false;
 		if($scope.is_template){
 			$scope.loadTemplate();
 		}
@@ -255,7 +255,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 			page_id:		31,
 			from_page_id:	1,
 			task_id:		"31_0",
-			task_name:		'Paradise Lost'
+			task_name:		"Paradise Lost"
 		};
 		console.log("template page>>>"+ $scope.config.page_id);
 		
@@ -312,7 +312,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
 				api_next_fn = api_next_fn || "$scope.getPage()";
-				api_on_error_fn = "add_error_fn";
+				api_on_error_fn = api_on_error_fn || "$scope.add_error_fn(request_data, err_data)";
 				api_mode = "POST";
 				break;
 			}
@@ -320,7 +320,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
 				api_next_fn = api_next_fn || "$scope.deleteDetail(request_data)";
-				api_on_error_fn = "$scope.delete_error_fn(request_data, err_data)";
+				api_on_error_fn = api_on_error_fn || "$scope.delete_error_fn(request_data, err_data)";
 				api_mode = "POST";
 				break;
 			}
@@ -328,7 +328,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = false;
 				api_offline_fn = "$scope.goOffline()";
 				api_next_fn = "";
-				api_on_error_fn = "get_error_fn";
+				api_on_error_fn = api_on_error_fn || "get_error_fn";
 				api_mode = "GET";
 				break;
 			}	
@@ -336,7 +336,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = false;
 				api_offline_fn = "$scope.goOffline()";
 				api_next_fn = "";
-				api_on_error_fn = "";
+				api_on_error_fn = api_on_error_fn || "";
 				api_mode = "GET";
 				break;
 			}	
@@ -344,7 +344,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = false;
 				api_offline_fn = "$scope.goOffline()";
 				api_next_fn = "";
-				api_on_error_fn = "";
+				api_on_error_fn = api_on_error_fn || "";
 				api_mode = "GET";
 				break;
 			}
@@ -352,7 +352,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = false;
 				api_offline_fn = "$scope.goOffline()";
 				api_next_fn = "";
-				api_on_error_fn = "";
+				api_on_error_fn = api_on_error_fn || "";
 				api_mode = "OTHER";
 				break;
 			}
@@ -360,7 +360,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
 				api_next_fn = api_next_fn || "$scope.getPage()";
-				api_on_error_fn = "add_error_fn";
+				api_on_error_fn = api_on_error_fn || "$scope.add_error_fn()";
 				api_mode = "POST";
 				break;
 			}
@@ -368,7 +368,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
 				api_next_fn = api_next_fn || "$scope.getPage()";
-				api_on_error_fn = "add_error_fn";
+				api_on_error_fn = api_on_error_fn || "$scope.add_error_fn()";
 				api_mode = "POST";
 				break;
 			}
@@ -376,15 +376,15 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 				api_offline_queue = true;
 				api_offline_fn = "$scope.mark_detail_pending()";
 				api_next_fn = api_next_fn || "$scope.getPage()";
-				api_on_error_fn = "add_error_fn";
+				api_on_error_fn = api_on_error_fn || "$scope.add_error_fn()";
 				api_mode = "POST";
 				break;
 			}
 			default: {
 				api_offline_queue = false;
 				api_offline_fn = "$scope.goOffline()";
-				api_next_fn = api_next_fn || '$scope.defaultNextFn(request_data, res_data)';
-				api_on_error_fn = "";
+				api_next_fn = api_next_fn || "$scope.defaultNextFn(request_data, res_data)";
+				api_on_error_fn = api_on_error_fn || "";
 				api_mode = "OTHER";
 				break;
 			}
@@ -430,7 +430,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 					var url = request_data.url || "";
 					if(url) {
 						if(window.cordova) {
-							cordova.InAppBrowser.open(url, '_blank', 'location=yes');
+							cordova.InAppBrowser.open(url, "_blank", "location=yes");
 						}
 						else {
 							window.open(url, "_system");
@@ -482,7 +482,7 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 	};
 	$scope.sortDetail = function() {
 		$scope.sort.order = ($scope.sort.order == "asc")?"desc":"asc";
-		console.log("$scope.sort>>>", $scope.sort);
+		console.log("$scope.sort>>>" + JSON.stringify($scope.sort));
 		
 		$scope.details = utilityService.sortByKey($scope.details, $scope.sort.key, $scope.sort.order);
 	};
@@ -586,6 +586,9 @@ DomenowApp.controller('TodoCtrl', function($scope, $state, $timeout, $interval,
 		console.log("detail pending");
 	};
 	$scope.delete_error_fn = function(request_data, err_data) {
+		utilityService.showAlert("Error: "+err_data.data.msg);
+	};
+	$scope.add_error_fn = function(request_data, err_data) {
 		utilityService.showAlert("Error: "+err_data.data.msg);
 	};
 	$scope.defaultNextFn = function(request_data, res_data) {
